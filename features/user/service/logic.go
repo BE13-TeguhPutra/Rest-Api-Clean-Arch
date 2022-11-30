@@ -2,6 +2,7 @@ package service
 
 import (
 	"be13/clean-arch/features/user"
+	"errors"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -31,7 +32,7 @@ func (service *userService) Delete(id int) error {
 func (service *userService) GetById(id int) (user.Core, error) {
 	data, errData := service.userRepository.GetById(id)
 	if errData != nil {
-		return user.Core{}, nil
+		return user.Core{}, errors.New("error get id")
 	}
 	return data, nil
 
@@ -53,7 +54,7 @@ func (service *userService) InsertUser(input user.Core) error {
 
 	err := service.userRepository.InsertUser(input)
 	if err != nil {
-		return err
+		return errors.New("Failed Insert Data")
 	}
 	return nil
 }
@@ -62,7 +63,7 @@ func (service *userService) InsertUser(input user.Core) error {
 func (service *userService) UpdateUser(id int, input user.Core) error {
 	err := service.userRepository.UpdateUser(id, input)
 	if err != nil {
-		return err
+		return errors.New("Id not Found")
 	}
 	return nil
 }

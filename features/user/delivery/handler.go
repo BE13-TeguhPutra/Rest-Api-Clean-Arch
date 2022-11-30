@@ -4,7 +4,6 @@ import (
 	"be13/clean-arch/features/user"
 	"be13/clean-arch/middlewares"
 	"be13/clean-arch/utils/helper"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -19,12 +18,12 @@ func New(service user.ServiceInterface, e *echo.Echo) {
 	handler := &UserDelivery{
 		userServices: service,
 	}
-	e.GET("/users", handler.GetAll, middlewares.JWTMiddleware())
+	e.GET("/users", handler.GetAll)
 	e.GET("/users/:id", handler.GetID, middlewares.JWTMiddleware())
 	e.POST("/users", handler.Create, middlewares.JWTMiddleware())
 	e.PUT("/users/:id", handler.UpdateID, middlewares.JWTMiddleware())
 
-	e.DELETE("/users/:id", handler.DeleteId, middlewares.JWTMiddleware())
+	e.DELETE("/users/:id", handler.DeleteId)
 }
 
 func (delivery *UserDelivery) GetAll(c echo.Context) error {
@@ -33,12 +32,12 @@ func (delivery *UserDelivery) GetAll(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponse("Failed"))
 	}
 	data := responseList(result)
-	role := middlewares.ExtractTokenUserRole(c)
-	fmt.Println(role)
-	if role != "sipir" {
-		return c.JSON(http.StatusUnauthorized, helper.FailedResponse("Failed role is not admin"))
+	// role := middlewares.ExtractTokenUserRole(c)
+	// fmt.Println(role)
+	// if role != "sipir" {
+	// 	return c.JSON(http.StatusUnauthorized, helper.FailedResponse("Failed role is not admin"))
 
-	}
+	// }
 
 	return c.JSON(http.StatusOK, helper.SuccessWithDataResponse("Success Get All Users", data))
 
